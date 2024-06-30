@@ -12,7 +12,7 @@
             .then((data) => {
                 data.forEach((message) => {
                     const li = document.createElement('li');
-                    li.innerText = message;
+                    li.innerText = message.text ?? message.mess;
                     messageList.appendChild(li);
                 });
             });

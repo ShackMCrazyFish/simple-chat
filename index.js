@@ -1,28 +1,43 @@
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/simple-chat');
+mongoose.set('debug', true);
+
 const app = require('express')();
 
-app.use(cors());
+const messageModel = mongoose.model('message', {
+    mess: String
+});
 
-const db = {
-  users: [],
-  messages: [],
-};
+app.use(cors());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
-  res.json(db.messages);
+
+    messageModel.find({})
+        .then((data) => {
+            res.json(data);
+        }).catch((err) => {
+        console.log(err);
+        res.status(500).json({code: 500, message: 'Internal server error'});
+    })
 });
 
 app.post('/', (req, res) => {
-  if (req.body.mess) {
-    db.messages.push(req.body.mess)
-  }
-  res.json({code: 200, message: 'OK'});
+    if (req.body.mess) {
+        messageModel.create({mess: req.body.mess})
+            .then(() => {
+                res.json({code: 200, message: 'OK'});
+            }).catch((err) => {
+            console.log(err);
+            res.status(500).json({code: 500, message: 'Internal server error'});
+        })
+    }
 });
 
 app.listen(3000, () => {
-  console.log('Server on port 3000');
+    console.log('Server on port 3000');
 });
