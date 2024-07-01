@@ -6,18 +6,10 @@ mongoose.set('debug', true);
 
 const app = require('express')();
 
-const userModel = mongoose.model('user', {
-    name: String,
-    avatar: String,
-});
-
-const messageModel = mongoose.model('message', {
-    text: String,
-    dateTime: Date,
-});
+const messageSchema = new mongoose.Schema({text: String, dateTime: Date});
 
 const chatModel = mongoose.model('chat', {
-    messages: [messageModel],
+    messages: [messageSchema],
 });
 
 app.use(cors());
