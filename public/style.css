@@ -43,6 +43,7 @@ body {
     background-color: var(--white);
     transform: translate(-50%, -50%);
 }
+
 .container .left {
     float: left;
     width: 37.6%;
@@ -67,6 +68,7 @@ body {
     background-color: var(--light);
     transform: translate(-50%, 0);
 }
+
 .container .left input {
     float: left;
     width: 188px;

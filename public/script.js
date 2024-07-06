@@ -1,7 +1,4 @@
 (async function(){
-    // document.querySelector('.chat[data-chat=person2]').classList.add('active-chat')
-    // document.querySelector('.person[data-chat=person2]').classList.add('active')
-
     let chats = await fetch('http://localhost:3000')
         .then(response => response.json())
         .then(data => data);
@@ -25,8 +22,12 @@
         li.appendChild(name);
         li.appendChild(time);
         li.appendChild(preview);
+        console.log(li)
         document.getElementById('chatList').appendChild(li);
-    })
+    });
+    console.log(chats[1]._id)
+    document.querySelector(`.chat[data-chat="${chats[1]._id}"]`).classList.add('active-chat')
+    document.querySelector('.person[data-chat=person2]').classList.add('active')
 
     let friends = {
             list: document.querySelector('ul.people'),
