@@ -24,24 +24,36 @@
     font-weight: 400;
 }
 
-.writeLink:before {
+.attach:before {
     display: inline-block;
     float: left;
     width: 20px;
     height: 42px;
     content: "";
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/attachment.png");
     background-repeat: no-repeat;
     background-position: center;
 }
 
-.attach:before {
-    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/attachment.png");
-}
-
 .smiley:before {
+    display: inline-block;
+    float: left;
+    width: 20px;
+    height: 42px;
+    content: "";
     background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/smiley.png");
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .send:before {
+    display: inline-block;
+    float: left;
+    width: 20px;
+    height: 42px;
+    margin-left: 11px;
+    content: "";
     background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/send.png");
+    background-repeat: no-repeat;
+    background-position: center;
 }
