@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # MongoDB Database Service
+  mongodb:
+    image: mongo:latest # Uses the official MongoDB image
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017" # Maps the container port to the host machine
+    environment:
+      # These variables create a root user the first time the container starts
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      # Persists data even after the container is removed
+      - mongodb_data:/data/db
+    networks:
+      - mongodb_network
+  
+  # Mongo Express UI Service
+  mongo-express:
+    image: mongo-express:latest # Uses the official Mongo Express image
+    container_name: mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081" # Access the UI at http://localhost:8081
+    environment:
+      # Connects to the 'mongodb' service within the Docker network
+      ME_CONFIG_MONGODB_SERVER: mongodb 
+      # Authentication for Mongo Express UI
+      ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
+      ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
+      # Credentials for connecting to the MongoDB instance
+      ME_CONFIG_MONGODB_ADMINUSERNAME: user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+    networks:
+      - mongodb_network
+    depends_on:
+      - mongodb # Ensures MongoDB starts first
+
+# Your Express.js Application Service
+  backend:
+    build: ../backend # Builds the image using the Dockerfile in the current directory
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000" # Maps your Express app's port
+    networks:
+      - mongodb_network
+    depends_on:
+      - mongodb
+    environment:
+      # Connection URL for your Express app to connect to MongoDB
+      MONGODB_URI: mongodb://user:root@mongodb:27017/testdb?authSource=admin
+    volumes:
+      - .:/app # Mounts your local project directory into the container
+      - /app/node_modules # Prevents host-specific node_modules from interfering
+
+# Define volumes and networks at the top level
+volumes:
+  mongodb_data:
+networks:
+  mongodb_network:
