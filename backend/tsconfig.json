@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2022", // Specify ECMAScript target version
+    "lib": [
+      "es2022"
+    ], // Specify library files to be included in the compilation
+    "module": "CommonJS", // Specify module code generation: use Node's modern approach
+    "moduleResolution": "node", // Specify module resolution strategy
+    "esModuleInterop": true, // Enables namespace imports (import * as fs from "fs") for CommonJS/AMD/Evolue modules
+    "forceConsistentCasingInFileNames": true, // Ensure that casing is consistent throughout the project
+    /* Type Checking */
+    "strict": true, // Enable all strict type-checking options
+    "skipLibCheck": true, // Skip type checking all .d.ts files
+    /* Emit */
+    "outDir": "./dist", // Redirect output structure to the directory
+    "rootDir": "./src", // Specify the root directory of source files
+    "sourceMap": true, // Generates corresponding .map files
+    /* Projects */
+    "baseUrl": "./", // Base directory to resolve non-absolute module names
+    "paths": {
+      /* Define path aliases here if needed */
+    }
+  },
+  "include": [
+    "src/**/*"
+  ], // Include files from the src directory
+  "exclude": [
+    "node_modules"
+  ] // Exclude the node_modules directory
+}
