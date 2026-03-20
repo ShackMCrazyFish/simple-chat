@@ -14,6 +14,10 @@ const loginBodySchema = z.object({
     password: z.string().min(8).max(255).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
 });
 
+const refreshTokenBodySchema = z.object({
+    refreshToken: z.string().min(1).max(255),
+});
+
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
@@ -44,6 +48,22 @@ export class AuthController {
                 return;
             }
             console.error('Error logging in user', err);
+            res.status(500).json({ error: 'Internal server error' });
+            return;
+        }
+    }
+
+    async refreshToken(req: Request, res: Response): Promise<void> {
+        try {
+            const { refreshToken } = refreshTokenBodySchema.parse(req.body);
+            const user = await this.authService.refreshToken(refreshToken);
+            res.status(200).json(user);
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                res.status(400).json({ error: err.message, details: err.issues });
+                return;
+            }
+            console.error('Error refreshing token', err);
             res.status(500).json({ error: 'Internal server error' });
             return;
         }

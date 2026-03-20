@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { AuthController } from "src/controllers/auth.controller";
-import { UserModel } from "src/models/user.model";
-import { AuthService } from "src/services/auth.service";
+import { AuthController } from "../controllers/auth.controller";
+import { UserModel } from "../models/user.model";
+import { AuthService } from "../services/auth.service";
 
 const router = Router();
 
@@ -10,5 +10,6 @@ const authController = new AuthController(authService);
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/refresh', authController.refreshToken);
 
 export default router;
