@@ -12,18 +12,23 @@ function ChatItem({chatInfo}) {
 }
 
 export default async function ChatList() {
-    const chatList = await getChatList();
-    const chatListItems = chatList.map((item: any) => <ChatItem key={item.id} chatInfo={item}/>);
-
-    return (
-        <ul id="chatList" className={styles.list}>
-            {chatListItems}
-        </ul>
-    );
+    try {
+        const chatList = await getChatList();
+        const chatListItems = chatList.map((item: any) => <ChatItem key={item.id} chatInfo={item}/>);
+    
+        return (
+            <ul id="chatList" className={styles.list}>
+                {chatListItems}
+            </ul>
+        );
+    } catch (error) {
+        console.error('Error fetching chat list', error);
+        return <div>Error fetching chat list</div>;
+    }
 }
 
 async function getChatList() {
-    const res = await fetch('http://localhost:3000');
+    const res = await fetch('http://localhost:3000/v1/api/chats');
 
     if (!res.ok) {
         throw new Error('Failed to fetch data');

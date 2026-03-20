@@ -6,12 +6,12 @@ import z from "zod";
 const registerBodySchema = z.object({
     name: z.string().min(1).max(255),
     email: z.email().min(1).max(255),
-    password: z.string().min(8).max(255).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+    password: z.string().min(8).max(32),
 });
 
 const loginBodySchema = z.object({
     email: z.email().min(1).max(255),
-    password: z.string().min(8).max(255).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+    password: z.string().min(8).max(32),
 });
 
 const refreshTokenBodySchema = z.object({
