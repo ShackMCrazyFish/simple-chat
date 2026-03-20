@@ -14,11 +14,13 @@ export class UserController {
         }
 
         const decoded = jwt.verify(authToken, process.env.JWT_SECRET as string);
-if (!decoded.payload?.user.id) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-}
-        const user = await this.userService.getUserById(decoded.payload.user.id);
+        
+        if (!(decoded as any).user?.id) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+
+        const user = await this.userService.getUserById((decoded as any).user?.id);
 
         if (!user) {
             res.status(404).json({ error: 'User not found' });
