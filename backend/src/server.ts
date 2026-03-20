@@ -8,6 +8,8 @@ dotenv.config();
 const envSchema = z.object({
     MONGO_URL: z.string(),
     PORT: z.number(),
+    JWT_SECRET: z.string(),
+    JWT_EXPIRES_IN: z.string(),
 });
 
 async function startServer() {

@@ -13,7 +13,6 @@ export class ChatService {
             throw new Error('Message is empty');
         }
 
-
         const updated = await this.chatModel
             .findByIdAndUpdate(
                 chatId, 
