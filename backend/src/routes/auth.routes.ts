@@ -8,8 +8,8 @@ const router = Router();
 const authService = new AuthService(UserModel);
 const authController = new AuthController(authService);
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.post('/refresh', authController.refreshToken);
+router.post('/register', authController.register.bind(authController));
+router.post('/login', authController.login.bind(authController));
+router.post('/refresh', authController.refreshToken.bind(authController));
 
 export default router;
