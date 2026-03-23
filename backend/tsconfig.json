@@ -27,5 +27,8 @@
   ], // Include files from the src directory
   "exclude": [
     "node_modules"
-  ] // Exclude the node_modules directory
+  ],
+  "ts-node": {
+    "files": true
+  }
 }

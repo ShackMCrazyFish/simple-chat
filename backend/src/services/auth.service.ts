@@ -2,6 +2,7 @@ import { Model } from "mongoose";
 import { UserDocument } from "src/models/user.model";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import type { AuthTokenPayload } from "../types/auth-token-payload";
 
 export class AuthService {
     constructor(private readonly userModel: Model<UserDocument>) {}
@@ -14,7 +15,7 @@ export class AuthService {
             throw new Error('User already exists');
         }
 
-        const newUser = await this.userModel.create({ name, email, passwordHash });
+        const newUser = await this.userModel.create({ name, email, password_hash: passwordHash });
 
         return this.tokenSign(newUser);
     }
@@ -26,9 +27,9 @@ export class AuthService {
             throw new Error('Invalid login or password');
         }
         
-        const passwordHash = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.compare(password, user.password_hash);
 
-        if (user.password_hash !== passwordHash) {
+        if (!passwordHash) {
             throw new Error('Invalid login or password');
         }
 
@@ -36,13 +37,25 @@ export class AuthService {
     }
 
     async refreshToken(refreshToken: string): Promise<any> {
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET as string);
-        
-        if (!decoded) {
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_TOKEN_SECRET as string
+        );
+
+        if (typeof decoded === 'string') {
             throw new Error('Invalid refresh token');
         }
 
-        const user = await this.userModel.findOne({ email: (decoded as any).user.id });
+        const payload = decoded as AuthTokenPayload;
+        const id = payload.user?.id;
+        const email = payload.user?.email;
+        if (!id && !email) {
+            throw new Error('Invalid refresh token');
+        }
+
+        const user = id
+            ? await this.userModel.findById(id)
+            : await this.userModel.findOne({ email });
 
         if (!user) {
             throw new Error('User not found');
@@ -52,7 +65,14 @@ export class AuthService {
     }
 
     private async tokenSign(user: UserDocument) {
-        const payload = { user: {name: user.name, email: user.email, admin: false}};
+        const payload: { user: AuthTokenPayload['user'] } = {
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                admin: false,
+            },
+        };
         return {
             accessToken: jwt.sign(
                 payload,
