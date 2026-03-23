@@ -18,6 +18,12 @@ const envSchema = z.object({
 async function startServer() {
     const env = envSchema.parse(process.env);
     await mongoose.connect(env.MONGO_URL);
+        try {
+            await mongoose.connect(env.MONGO_URL);
+        } catch (error) {
+            console.error('Error connecting to MongoDB', error);
+            process.exit(1);
+        };
     const port = env.PORT ?? 3000;
     app.listen(port, () => {
         console.log(`Server on port ${port}`);
